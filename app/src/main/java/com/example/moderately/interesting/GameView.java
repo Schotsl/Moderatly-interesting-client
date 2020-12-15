@@ -13,6 +13,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private StarSprite[] starSprites = new StarSprite[1000];
     private PlayerSprite playerSprite;
 
+    private Integer xTouch;
+    private Integer yTouch;
+
     public GameView(Context context) {
         super(context);
 
@@ -30,7 +33,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
-        return super.onTouchEvent(event);
+        xTouch = (int) event.getX();
+        yTouch = (int) event.getY();
+
+        if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+            xTouch = null;
+            yTouch = null;
+        }
+
+        return true;
     }
 
     @Override
@@ -55,7 +66,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         // Update the position of the player and every single star
         for (int i = 0; i < starSprites.length; i ++) starSprites[i].update();
-        playerSprite.update();
+        playerSprite.update(xTouch);
     }
 
     @Override
