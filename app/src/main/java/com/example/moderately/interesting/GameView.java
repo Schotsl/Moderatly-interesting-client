@@ -1,6 +1,7 @@
 package com.example.moderately.interesting;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
+    private StarSprite[] starSprites = new StarSprite[1000];
     private PlayerSprite playerSprite;
 
     public GameView(Context context) {
@@ -33,8 +35,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        playerSprite = new PlayerSprite(BitmapFactory.decodeResource(getResources(), R.drawable.player));
+        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
+        // Initialize the player and every single star
+        playerSprite = new PlayerSprite(screenWidth, screenHeight, BitmapFactory.decodeResource(getResources(), R.drawable.player));
+        for (int i = 0; i < starSprites.length; i ++) starSprites[i] = new StarSprite(screenWidth, screenHeight);
+
+        // Start the game logic
         thread.setRunning(true);
         thread.start();
     }
@@ -45,6 +53,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+        // Update the position of the player and every single star
+        for (int i = 0; i < starSprites.length; i ++) starSprites[i].update();
         playerSprite.update();
     }
 
@@ -52,6 +62,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas)
     {
         super.draw(canvas);
-        if (canvas != null) playerSprite.draw(canvas);
+
+        if (canvas != null) {
+            // Draw the player and every single star
+            for (int i = 0; i < starSprites.length; i ++) starSprites[i].draw(canvas);
+            playerSprite.draw(canvas);
+        }
     }
 }
