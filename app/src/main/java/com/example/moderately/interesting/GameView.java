@@ -2,6 +2,7 @@ package com.example.moderately.interesting;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -10,7 +11,10 @@ import android.graphics.BitmapFactory;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
+
     private StarSprite[] starSprites = new StarSprite[1000];
+    private EnemySprite[] enemySprites = new EnemySprite[10];
+
     private PlayerSprite playerSprite;
 
     private Integer xTouch;
@@ -49,9 +53,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
+        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
+        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+
         // Initialize the player and every single star
-        playerSprite = new PlayerSprite(screenWidth, screenHeight, BitmapFactory.decodeResource(getResources(), R.drawable.player));
+        playerSprite = new PlayerSprite(screenWidth, screenHeight, playerBitmap);
         for (int i = 0; i < starSprites.length; i ++) starSprites[i] = new StarSprite(screenWidth, screenHeight);
+        for (int i = 0; i < enemySprites.length; i ++) enemySprites[i] = new EnemySprite(screenWidth, screenHeight, enemyBitmap);
 
         // Start the game logic
         thread.setRunning(true);
@@ -66,6 +74,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void update() {
         // Update the position of the player and every single star
         for (int i = 0; i < starSprites.length; i ++) starSprites[i].update();
+        for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].update();
         playerSprite.update(xTouch);
     }
 
@@ -77,6 +86,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         if (canvas != null) {
             // Draw the player and every single star
             for (int i = 0; i < starSprites.length; i ++) starSprites[i].draw(canvas);
+            for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].draw(canvas);
             playerSprite.draw(canvas);
         }
     }

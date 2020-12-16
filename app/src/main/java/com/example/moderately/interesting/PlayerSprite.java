@@ -10,22 +10,14 @@ public class PlayerSprite {
     private int xPosition;
     private int yPosition;
     private int xVelocity;
-    private int yVelocity;
-
-    private int screenWidth;
-    private int screenHeight;
 
     public PlayerSprite (int screenWidth, int screenHeight, Bitmap bitmap) {
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-
         double playerWidth = screenWidth * 0.25;
         double playerHeight = playerWidth * bitmap.getHeight() / bitmap.getWidth();
+        this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) playerWidth, (int) playerHeight, true);
 
-        this.bitmap = Bitmap.createScaledBitmap(bitmap, (int)playerWidth, (int)playerHeight, true);
         this.yPosition = (int) (screenHeight * 0.85);
         this.xPosition = 100;
-        this.yVelocity = 10;
         this.xVelocity = 10;
     }
 
