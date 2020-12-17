@@ -19,4 +19,11 @@ public class Util {
 
         canvas.drawBitmap(bitmap, xCenter, yCenter, null);
     }
+
+    public static Boolean collidingBitmap(Bitmap firstBitmap, Position firstPosition, Bitmap secondBitmap, Position secondPosition) {
+        return (firstPosition.xPosition - firstBitmap.getWidth() / 2 < secondPosition.xPosition + secondBitmap.getWidth() / 2 &&
+                firstPosition.xPosition + firstBitmap.getWidth() / 2 > secondPosition.xPosition - secondBitmap.getWidth() / 2 &&
+                firstPosition.yPosition - firstBitmap.getHeight() / 2 < secondPosition.yPosition + secondBitmap.getHeight() / 2 &&
+                firstPosition.yPosition + firstBitmap.getHeight() / 2 > secondPosition.yPosition - secondBitmap.getHeight() / 2);
+    }
 }
