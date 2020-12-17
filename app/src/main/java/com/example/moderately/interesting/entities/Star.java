@@ -1,10 +1,10 @@
-package com.example.moderately.interesting;
+package com.example.moderately.interesting.entities;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-public class StarSprite {
+public class Star {
     private int starSize;
     private int starColor;
 
@@ -14,7 +14,7 @@ public class StarSprite {
 
     private int screenHeight;
 
-    public StarSprite(int screenWidth, int screenHeight) {
+    public Star(int screenWidth, int screenHeight) {
         this.screenHeight = screenHeight;
 
         this.xPosition = (int) (Math.random() * screenWidth);

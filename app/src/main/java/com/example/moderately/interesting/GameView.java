@@ -9,13 +9,17 @@ import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.graphics.BitmapFactory;
 
+import com.example.moderately.interesting.entities.Enemy;
+import com.example.moderately.interesting.entities.Player;
+import com.example.moderately.interesting.entities.Star;
+
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
 
-    private StarSprite[] starSprites = new StarSprite[1000];
-    private EnemySprite[] enemySprites = new EnemySprite[10];
+    private Star[] starSprites = new Star[1000];
+    private Enemy[] enemySprites = new Enemy[10];
 
-    private PlayerSprite playerSprite;
+    private Player playerSprite;
 
     private Integer xTouch;
     private Integer yTouch;
@@ -57,9 +61,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player);
 
         // Initialize the player and every single star
-        playerSprite = new PlayerSprite(screenWidth, screenHeight, playerBitmap);
-        for (int i = 0; i < starSprites.length; i ++) starSprites[i] = new StarSprite(screenWidth, screenHeight);
-        for (int i = 0; i < enemySprites.length; i ++) enemySprites[i] = new EnemySprite(screenWidth, screenHeight, enemyBitmap);
+        playerSprite = new Player(screenWidth, screenHeight, playerBitmap);
+        for (int i = 0; i < starSprites.length; i ++) starSprites[i] = new Star(screenWidth, screenHeight);
+        for (int i = 0; i < enemySprites.length; i ++) enemySprites[i] = new Enemy(screenWidth, screenHeight, enemyBitmap);
 
         // Start the game logic
         thread.setRunning(true);

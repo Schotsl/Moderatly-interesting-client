@@ -1,9 +1,9 @@
-package com.example.moderately.interesting;
+package com.example.moderately.interesting.entities;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
-public class EnemySprite {
+public class Enemy {
     private Bitmap bitmap;
 
     private int xPosition;
@@ -13,7 +13,7 @@ public class EnemySprite {
     private int screenWidth;
     private int screenHeight;
 
-    public EnemySprite(int screenWidth, int screenHeight, Bitmap bitmap) {
+    public Enemy(int screenWidth, int screenHeight, Bitmap bitmap) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 

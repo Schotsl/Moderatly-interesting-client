@@ -1,17 +1,17 @@
-package com.example.moderately.interesting;
+package com.example.moderately.interesting.entities;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.content.res.Resources;
 
-public class PlayerSprite {
+public class Player {
     private Bitmap bitmap;
 
     private int xPosition;
     private int yPosition;
     private int xVelocity;
 
-    public PlayerSprite (int screenWidth, int screenHeight, Bitmap bitmap) {
+    public Player(int screenWidth, int screenHeight, Bitmap bitmap) {
         double playerWidth = screenWidth * 0.25;
         double playerHeight = playerWidth * bitmap.getHeight() / bitmap.getWidth();
         this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) playerWidth, (int) playerHeight, true);
