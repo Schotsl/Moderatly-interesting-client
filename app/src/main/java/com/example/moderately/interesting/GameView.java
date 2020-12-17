@@ -105,7 +105,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].update();
         Position position = playerSprite.update(xTouch);
 
-        Bullet bullet = new Bullet(position);
+        Bullet bullet = new Bullet(position, bulletBitmap);
         bulletSprites.add(bullet);
 
     }
@@ -119,8 +119,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             // Draw the player and every single star
             for (int i = 0; i < starSprites.length; i ++) starSprites[i].draw(canvas);
             for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].draw(canvas);
-            playerSprite.draw(canvas);
             for (Bullet bullet : bulletSprites) bullet.draw(canvas);
+            playerSprite.draw(canvas);
         }
     }
 }

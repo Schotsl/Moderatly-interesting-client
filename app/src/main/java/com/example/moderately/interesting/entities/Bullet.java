@@ -1,25 +1,27 @@
 package com.example.moderately.interesting.entities;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import com.example.moderately.interesting.Util;
 import com.example.moderately.interesting.properties.Position;
 import com.example.moderately.interesting.properties.Velocity;
 
 public class Bullet {
+    private Bitmap bitmap;
     private Position position;
     private Velocity velocity = new Velocity();
 
-    public Bullet(Position position) {
+    public Bullet(Position position, Bitmap bitmap) {
         this.velocity.yVelocity = -10;
         this.position = position;
+        this.bitmap = bitmap;
     }
 
     public void draw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setColor(Color.rgb(255, 0, 0));
-        canvas.drawRect(position.xPosition - 5, position.yPosition - 10, position.xPosition + 5, position.yPosition + 10, paint);
+        Util.centerDraw(position, bitmap, canvas);
     }
 
     public Position update() {

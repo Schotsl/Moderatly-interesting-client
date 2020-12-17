@@ -4,12 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.content.res.Resources;
 
+import com.example.moderately.interesting.Util;
 import com.example.moderately.interesting.properties.Position;
 import com.example.moderately.interesting.properties.Velocity;
 
 public class Player {
     private Bitmap bitmap;
-
     private Position position = new Position();
     private Velocity velocity = new Velocity();
 
@@ -21,7 +21,7 @@ public class Player {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, position.xPosition - bitmap.getWidth() / 2, position.yPosition - bitmap.getHeight() / 2, null);
+        Util.centerDraw(position, bitmap, canvas);
     }
 
     public Position update(Integer touchX) {

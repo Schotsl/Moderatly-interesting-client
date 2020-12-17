@@ -3,12 +3,12 @@ package com.example.moderately.interesting.entities;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.example.moderately.interesting.Util;
 import com.example.moderately.interesting.properties.Position;
 import com.example.moderately.interesting.properties.Velocity;
 
 public class Enemy {
     private Bitmap bitmap;
-
     private Velocity velocity = new Velocity();
     private Position position = new Position();
 
@@ -26,7 +26,7 @@ public class Enemy {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, position.xPosition - bitmap.getWidth() / 2, position.yPosition - bitmap.getHeight() / 2, null);
+        Util.centerDraw(position, bitmap, canvas);
     }
 
     public Position update() {
