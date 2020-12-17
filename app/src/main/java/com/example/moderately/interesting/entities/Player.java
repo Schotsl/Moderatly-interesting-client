@@ -34,6 +34,10 @@ public class Player {
             else position.xPosition = touchX;
         }
 
+        // Have yet to find a way to clone the position object
+        Position position = new Position();
+        position.yPosition = this.position.yPosition;
+        position.xPosition = this.position.xPosition;
         return position;
     }
 }

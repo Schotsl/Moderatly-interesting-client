@@ -12,12 +12,18 @@ import android.graphics.BitmapFactory;
 import com.example.moderately.interesting.entities.Enemy;
 import com.example.moderately.interesting.entities.Player;
 import com.example.moderately.interesting.entities.Star;
+import com.example.moderately.interesting.entities.Bullet;
+import com.example.moderately.interesting.properties.Position;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
 
     private Star[] starSprites = new Star[1000];
     private Enemy[] enemySprites = new Enemy[10];
+    private List<Bullet> bulletSprites = new ArrayList<Bullet>();
 
     private Player playerSprite;
 
@@ -76,10 +82,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+//        // Make a copy of the array so we can clean it
+        List<Bullet> bulletsCopy = new ArrayList<>(bulletSprites);
+
+        for (Bullet bullet : bulletsCopy) {
+            // Remove the bullet if its outside the screen
+            if (bullet.outside()) bulletSprites.remove(bullet);
+            else bullet.update();
+        }
+
         // Update the position of the player and every single star
         for (int i = 0; i < starSprites.length; i ++) starSprites[i].update();
         for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].update();
-        playerSprite.update(xTouch);
+        Position position = playerSprite.update(xTouch);
+
+        Bullet bullet = new Bullet(position);
+        bulletSprites.add(bullet);
+
     }
 
     @Override
@@ -88,10 +107,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
 
         if (canvas != null) {
+
             // Draw the player and every single star
             for (int i = 0; i < starSprites.length; i ++) starSprites[i].draw(canvas);
             for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].draw(canvas);
             playerSprite.draw(canvas);
+            for (Bullet bullet : bulletSprites) bullet.draw(canvas);
         }
     }
 }
