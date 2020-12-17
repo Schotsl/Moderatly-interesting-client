@@ -14,10 +14,7 @@ public class Player {
     private Velocity velocity = new Velocity();
 
     public Player(int screenWidth, int screenHeight, Bitmap bitmap) {
-        double playerWidth = screenWidth * 0.25;
-        double playerHeight = playerWidth * bitmap.getHeight() / bitmap.getWidth();
-        this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) playerWidth, (int) playerHeight, true);
-
+        this.bitmap = bitmap;
         this.position.yPosition = (int) (screenHeight * 0.85);
         this.position.xPosition = 100;
         this.velocity.xVelocity = 10;

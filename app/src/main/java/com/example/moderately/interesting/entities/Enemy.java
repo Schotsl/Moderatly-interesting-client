@@ -19,10 +19,7 @@ public class Enemy {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
 
-        double enemyWidth = screenWidth * 0.25;
-        double enemyHeight = enemyWidth * bitmap.getHeight() / bitmap.getWidth();
-        this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) enemyWidth, (int) enemyHeight, true);
-
+        this.bitmap = bitmap;
         this.position.yRandom(-screenHeight, 0);
         this.position.xRandom(0, screenWidth);
         this.velocity.yRandom(7, 10);

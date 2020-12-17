@@ -30,6 +30,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Integer xTouch;
     private Integer yTouch;
 
+    private Bitmap enemyBitmap;
+    private Bitmap playerBitmap;
+    private Bitmap bulletBitmap;
+
     public GameView(Context context) {
         super(context);
 
@@ -63,8 +67,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
         int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-        Bitmap enemyBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
-        Bitmap playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+        Bitmap enemyRaw = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
+        Bitmap bulletRaw = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
+        Bitmap playerRaw = BitmapFactory.decodeResource(getResources(), R.drawable.player);
+
+        enemyBitmap = Util.resizeBitmap((int) (screenWidth * 0.18), enemyRaw);
+        bulletBitmap = Util.resizeBitmap((int) (screenWidth * 0.04), bulletRaw);
+        playerBitmap = Util.resizeBitmap((int) (screenWidth * 0.16), playerRaw);
 
         // Initialize the player and every single star
         playerSprite = new Player(screenWidth, screenHeight, playerBitmap);
@@ -82,7 +91,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-//        // Make a copy of the array so we can clean it
+        // Make a copy of the array so we can clean it
         List<Bullet> bulletsCopy = new ArrayList<>(bulletSprites);
 
         for (Bullet bullet : bulletsCopy) {
@@ -107,7 +116,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
 
         if (canvas != null) {
-
             // Draw the player and every single star
             for (int i = 0; i < starSprites.length; i ++) starSprites[i].draw(canvas);
             for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].draw(canvas);
