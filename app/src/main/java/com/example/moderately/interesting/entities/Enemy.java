@@ -3,12 +3,14 @@ package com.example.moderately.interesting.entities;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import com.example.moderately.interesting.properties.Position;
+import com.example.moderately.interesting.properties.Velocity;
+
 public class Enemy {
     private Bitmap bitmap;
 
-    private int xPosition;
-    private int yPosition;
-    private int yVelocity;
+    private Velocity velocity = new Velocity();
+    private Position position = new Position();
 
     private int screenWidth;
     private int screenHeight;
@@ -21,21 +23,23 @@ public class Enemy {
         double enemyHeight = enemyWidth * bitmap.getHeight() / bitmap.getWidth();
         this.bitmap = Bitmap.createScaledBitmap(bitmap, (int) enemyWidth, (int) enemyHeight, true);
 
-        this.yPosition = (int) (-screenHeight * Math.random());
-        this.xPosition = (int) (screenWidth * Math.random());
-        this.yVelocity = 10;
+        this.position.yRandom(-screenHeight, 0);
+        this.position.xRandom(0, screenWidth);
+        this.velocity.yRandom(7, 10);
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawBitmap(bitmap, xPosition - bitmap.getWidth() / 2, yPosition - bitmap.getHeight() / 2, null);
+        canvas.drawBitmap(bitmap, position.xPosition - bitmap.getWidth() / 2, position.yPosition - bitmap.getHeight() / 2, null);
     }
 
-    public void update() {
-        yPosition += yVelocity;
+    public Position update() {
+        position.yPosition += velocity.yVelocity;
 
-        if (yPosition - bitmap.getHeight() / 2 > screenHeight) {
-            yPosition = -bitmap.getHeight() / 2;
-            xPosition = (int) (Math.random() * screenWidth);
+        if (position.yPosition - bitmap.getHeight() / 2 > screenHeight) {
+            position.yPosition = -bitmap.getHeight() / 2;
+            position.xPosition = (int) (Math.random() * screenWidth);
         }
+
+        return position;
     }
 }
