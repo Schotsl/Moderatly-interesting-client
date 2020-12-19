@@ -122,9 +122,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].update();
         Position position = playerSprite.update(xTouch);
 
-        Bullet bullet = new Bullet(position, bulletBitmap);
-        bulletSprites.add(bullet);
-
+        if (playerSprite.canShoot()) {
+            Bullet bullet = new Bullet(position, bulletBitmap);
+            bulletSprites.add(bullet);
+            playerSprite.resetReload();
+        }
     }
 
     @Override
