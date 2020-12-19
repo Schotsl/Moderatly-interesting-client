@@ -19,7 +19,7 @@ public class Player {
         this.bitmap = bitmap;
         this.position.yPosition = (int) (screenHeight * 0.85);
         this.position.xPosition = 100;
-        this.velocity.xVelocity = 10;
+        this.velocity.xVelocity = 20;
 
         resetReload();
     }
@@ -50,7 +50,7 @@ public class Player {
     }
 
     public void resetReload() {
-        this.reloadTime = 30;
+        this.reloadTime = 40;
     }
 
     /**
