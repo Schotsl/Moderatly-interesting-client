@@ -2,6 +2,7 @@ package com.example.moderately.interesting.entities;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 import com.example.moderately.interesting.Util;
 import com.example.moderately.interesting.properties.Position;
@@ -14,6 +15,7 @@ public class Enemy {
 
     private int screenWidth;
     private int screenHeight;
+
 
     public Enemy(int screenWidth, int screenHeight, Bitmap bitmap) {
         this.screenWidth = screenWidth;
@@ -29,12 +31,16 @@ public class Enemy {
         Util.centerDraw(position, bitmap, canvas);
     }
 
+    public void respawn() {
+        position.yPosition = -bitmap.getHeight() / 2 - (int) (Math.random() * 2500); // Add random height to randomise spawn rate.
+        position.xPosition = (int) (Math.random() * screenWidth);
+    }
+
     public Position update() {
         position.yPosition += velocity.yVelocity;
 
         if (position.yPosition - bitmap.getHeight() / 2 > screenHeight) {
-            position.yPosition = -bitmap.getHeight() / 2;
-            position.xPosition = (int) (Math.random() * screenWidth);
+            this.respawn();
         }
 
         // Have yet to find a way to clone the position object
@@ -42,5 +48,26 @@ public class Enemy {
         position.yPosition = this.position.yPosition;
         position.xPosition = this.position.xPosition;
         return position;
+    }
+
+    /**
+     * Returns the Rect shape corresponding with this bitmap, used for collision detection
+     * @return Rect matching the bitmap size.
+     */
+    public Rect getCollisionShape() {
+        int left = position.xPosition - bitmap.getWidth() / 2;
+        int top = position.yPosition - bitmap.getHeight() / 2;
+        int right = position.xPosition + bitmap.getWidth() / 2;
+        int bottom = position.yPosition + bitmap.getWidth() / 2;
+
+        return new Rect(left, top, right, bottom);
+    }
+
+    /**
+     * Checks entity yPosition returns true when entity is on screen.
+     * @return true if yPosition is on screen a.k.a. >= 0;
+     */
+    public boolean onScreen() {
+        return this.position.yPosition >= 0;
     }
 }

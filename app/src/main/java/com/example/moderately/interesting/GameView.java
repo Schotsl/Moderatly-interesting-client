@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
@@ -98,6 +99,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             // Remove the bullet if its outside the screen
             if (bullet.outside()) bulletSprites.remove(bullet);
             else bullet.update();
+
+            // Check if Enemies are shot
+            for (Enemy enemy : enemySprites) {
+                if (Rect.intersects(enemy.getCollisionShape(), bullet.getCollisionShape()) && enemy.onScreen() ) {
+                    enemy.respawn();
+                }
+            }
+        }
+
+        for (Enemy enemy : enemySprites) {
+            if (Rect.intersects(enemy.getCollisionShape(), playerSprite.getCollisionShape())) {
+                System.out.println("Player is hit!");
+
+                // Kill the enemy that hit the player
+                enemy.respawn();
+            }
         }
 
         // Update the position of the player and every single star
