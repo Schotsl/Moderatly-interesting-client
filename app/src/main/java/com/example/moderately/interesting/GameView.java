@@ -15,12 +15,14 @@ import com.example.moderately.interesting.entities.Player;
 import com.example.moderately.interesting.entities.Star;
 import com.example.moderately.interesting.entities.Bullet;
 import com.example.moderately.interesting.properties.Position;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
+    private FirebaseFirestore database;
 
     private Star[] starSprites = new Star[1000];
     private Enemy[] enemySprites = new Enemy[10];
@@ -42,6 +44,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
 
         thread = new MainThread(getHolder(), this);
+        database = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -59,6 +62,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             xTouch = null;
             yTouch = null;
         }
+
+//        Map<String, Object> city = new HashMap<>();
+//        city.put("name", "Los Angeles");
+//        city.put("state", "CA");
+//        city.put("country", "USA");
+//
+//        this.database.collection("users").document("LA")
+//                .set(city)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // Log.d(TAG, "DocumentSnapshot successfully written!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        // Log.w(TAG, "Error writing document", e);
+//                        System.out.println(e);
+//                    }
+//                });
 
         return true;
     }
