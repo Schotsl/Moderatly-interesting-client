@@ -1,26 +1,35 @@
 package com.example.moderately.interesting;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+
+import android.content.Context;
+import android.content.res.Resources;
+
+import android.graphics.Rect;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.graphics.BitmapFactory;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.moderately.interesting.entities.Enemy;
 import com.example.moderately.interesting.entities.Player;
 import com.example.moderately.interesting.entities.Star;
 import com.example.moderately.interesting.entities.Bullet;
 import com.example.moderately.interesting.properties.Position;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+    private Typeface typeface;
     private MainThread thread;
     private FirebaseFirestore database;
 
@@ -33,9 +42,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Integer xTouch;
     private Integer yTouch;
 
+    private Integer playerScore = 4;
+    private Integer playerHealth = 4;
+
+    private Integer screenWidth;
+    private Integer screenHeight;
+
     private Bitmap enemyBitmap;
     private Bitmap playerBitmap;
     private Bitmap bulletBitmap;
+
+    private Paint firstLayer = new Paint();
+    private Paint secondLayer = new Paint();
 
     public GameView(Context context) {
         super(context);
@@ -45,6 +63,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         thread = new MainThread(getHolder(), this);
         database = FirebaseFirestore.getInstance();
+    }
+
+    public void drawText(Canvas canvas, String text) {
+        Position position = new Position();
+        position.xPosition = screenWidth / 2;
+        position.yPosition = screenHeight / 2;
+
+        int xOffset = 0;
+
+        for (int i = 0; i < text.length(); i ++) {
+            // Turn the single character into a string
+            String character = Character.toString(text.charAt(i));
+
+            // Get the character width
+            Rect rect = new Rect();
+            firstLayer.getTextBounds(character, 0, 1, rect);
+            int width = rect.width();
+
+            // Draw the layers
+            canvas.drawText(character, position.xPosition + xOffset, position.yPosition, firstLayer);
+            canvas.drawText(character, position.xPosition + xOffset - 2, position.yPosition - 35 / 2, secondLayer);
+
+            // Update the offset
+            xOffset += (int) (width * 1.25);
+        }
     }
 
     @Override
@@ -63,39 +106,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             yTouch = null;
         }
 
-//        Map<String, Object> city = new HashMap<>();
-//        city.put("name", "Los Angeles");
-//        city.put("state", "CA");
-//        city.put("country", "USA");
-//
-//        this.database.collection("users").document("LA")
-//                .set(city)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        // Log.d(TAG, "DocumentSnapshot successfully written!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        // Log.w(TAG, "Error writing document", e);
-//                        System.out.println(e);
-//                    }
-//                });
-
         return true;
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
+        screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
 
+        // Load the bitmaps
         Bitmap enemyRaw = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
         Bitmap bulletRaw = BitmapFactory.decodeResource(getResources(), R.drawable.bullet);
         Bitmap playerRaw = BitmapFactory.decodeResource(getResources(), R.drawable.player);
 
+        typeface = ResourcesCompat.getFont(getContext(), R.font.pixel);
+
+        // Resize bitmap to fit screen
         enemyBitmap = Util.resizeBitmap((int) (screenWidth * 0.18), enemyRaw);
         bulletBitmap = Util.resizeBitmap((int) (screenWidth * 0.04), bulletRaw);
         playerBitmap = Util.resizeBitmap((int) (screenWidth * 0.16), playerRaw);
@@ -104,6 +130,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         playerSprite = new Player(screenWidth, screenHeight, playerBitmap);
         for (int i = 0; i < starSprites.length; i ++) starSprites[i] = new Star(screenWidth, screenHeight);
         for (int i = 0; i < enemySprites.length; i ++) enemySprites[i] = new Enemy(screenWidth, screenHeight, enemyBitmap);
+
+        // Create first font layer
+        firstLayer.setColor(Color.rgb(178,34,34));
+        firstLayer.setTextSize(150);
+        firstLayer.setTypeface(typeface);
+        firstLayer.setTextAlign(Paint.Align.CENTER);
+
+        // Create second font layer
+        secondLayer.setColor(Color.WHITE);
+        secondLayer.setTextSize(115);
+        secondLayer.setTypeface(typeface);
+        secondLayer.setTextAlign(Paint.Align.CENTER);
 
         // Start the game logic
         thread.setRunning(true);
@@ -126,7 +164,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             // Check if Enemies are shot
             for (Enemy enemy : enemySprites) {
-                if (Rect.intersects(enemy.getCollisionShape(), bullet.getCollisionShape()) && enemy.onScreen() ) {
+                if (Rect.intersects(enemy.getCollisionShape(), bullet.getCollisionShape()) && enemy.onScreen()) {
                     enemy.respawn();
                 }
             }
@@ -142,8 +180,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         // Update the position of the player and every single star
-        for (int i = 0; i < starSprites.length; i ++) starSprites[i].update();
-        for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].update();
+        for (int i = 0; i < starSprites.length; i++) starSprites[i].update();
+        for (int i = 0; i < enemySprites.length; i++) enemySprites[i].update();
         Position position = playerSprite.update(xTouch);
 
         if (playerSprite.canShoot()) {
@@ -164,6 +202,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             for (int i = 0; i < enemySprites.length; i ++) enemySprites[i].draw(canvas);
             for (Bullet bullet : bulletSprites) bullet.draw(canvas);
             playerSprite.draw(canvas);
+
+            drawText(canvas, "00000");
         }
     }
 }
